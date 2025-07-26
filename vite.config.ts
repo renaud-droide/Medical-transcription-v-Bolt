@@ -1,7 +1,9 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { fileURLToPath, URL } from 'node:url';
 
 export default defineConfig({
+  base: '/', // ✅ Chemin racine pour un domaine personnalisé comme brainproject.tech
   plugins: [react()],
   assetsInclude: ['**/*.jpg', '**/*.jpeg', '**/*.png', '**/*.gif', '**/*.svg'],
   build: {
@@ -15,7 +17,7 @@ export default defineConfig({
   publicDir: 'public',
   resolve: {
     alias: {
-      '@': '/src'
+      '@': fileURLToPath(new URL('./src', import.meta.url))
     }
   }
 });
