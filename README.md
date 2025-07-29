@@ -7,6 +7,7 @@
 - Gestion des points structurés avec numérotation automatique
 - Génération automatique des templates
 - Prévisualisation en temps réel
+- Génération de comptes rendus via l'API OpenAI
 
 ### 2. Diarisation avancée
 - Analyse du timbre de voix pour une meilleure détection des changements de locuteur

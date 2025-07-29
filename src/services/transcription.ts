@@ -1,6 +1,7 @@
 import { API_CONFIG } from '../config/api';
 import { useRecordingStore } from '../store/recordingStore';
 import { handleAPIError } from '../utils/errorHandling';
+import { chatCompletion } from './openai';
 
 let recognition: SpeechRecognition | null = null;
 
@@ -92,36 +93,23 @@ export async function generateReport(transcription: string, template: string): P
   try {
     const { aiSettings } = useRecordingStore.getState();
 
-    const response = await fetch(`${API_CONFIG.baseURL}/chat/completions`, {
-      method: 'POST',
-      headers: API_CONFIG.headers,
-      body: JSON.stringify({
-        model: 'gpt-4o-mini-2024-07-18',
-        messages: [
-          {
-            role: 'system',
-            content: 'You are a medical professional assistant helping to generate structured medical reports.'
-          },
-          {
-            role: 'user',
-            content: `${template}\n\nTranscription:\n${transcription}`
-          }
-        ],
-        temperature: aiSettings.temperature,
-        presence_penalty: aiSettings.presencePenalty,
-        frequency_penalty: aiSettings.frequencyPenalty,
-        max_tokens: aiSettings.maxTokens,
-        response_format: { type: "text" }
-      })
+    const messages = [
+      {
+        role: 'system',
+        content: 'You are a medical professional assistant helping to generate structured medical reports.'
+      },
+      {
+        role: 'user',
+        content: `${template}\n\nTranscription:\n${transcription}`
+      }
+    ];
+
+    return await chatCompletion(messages, {
+      temperature: aiSettings.temperature,
+      presence_penalty: aiSettings.presencePenalty,
+      frequency_penalty: aiSettings.frequencyPenalty,
+      max_tokens: aiSettings.maxTokens
     });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw handleAPIError(response.status, errorData);
-    }
-
-    const data = await response.json();
-    return data.choices[0].message.content;
   } catch (error) {
     console.error('Erreur de génération du rapport:', error);
     if (error instanceof Error) {
@@ -135,39 +123,26 @@ export async function generateColleagueLetter(transcription: string, report: str
   try {
     const { aiSettings, selectedLetterTemplate } = useRecordingStore.getState();
 
-    const response = await fetch(`${API_CONFIG.baseURL}/chat/completions`, {
-      method: 'POST',
-      headers: API_CONFIG.headers,
-      body: JSON.stringify({
-        model: 'gpt-4o-mini-2024-07-18',
-        messages: [
-          {
-            role: 'system',
-            content: selectedLetterTemplate?.customInstructions || 
-              'You are a medical professional assistant helping to write formal letters to colleagues.'
-          },
-          {
-            role: 'user',
-            content: `Veuillez générer une lettre professionnelle à un collègue basée sur cette consultation médicale.
+    const messages = [
+      {
+        role: 'system',
+        content: selectedLetterTemplate?.customInstructions ||
+          'You are a medical professional assistant helping to write formal letters to colleagues.'
+      },
+      {
+        role: 'user',
+        content: `Veuillez générer une lettre professionnelle à un collègue basée sur cette consultation médicale.
 ${selectedLetterTemplate?.template ? `\nTemplate à suivre:\n${selectedLetterTemplate.template}` : ''}
-\nTranscription:\n${transcription}\n\n${report ? `Rapport médical:\n${report}` : ''}`
-          }
-        ],
-        temperature: aiSettings.temperature,
-        presence_penalty: aiSettings.presencePenalty,
-        frequency_penalty: aiSettings.frequencyPenalty,
-        max_tokens: aiSettings.maxTokens,
-        response_format: { type: "text" }
-      })
+Transcription:\n${transcription}\n\n${report ? `Rapport médical:\n${report}` : ''}`
+      }
+    ];
+
+    return await chatCompletion(messages, {
+      temperature: aiSettings.temperature,
+      presence_penalty: aiSettings.presencePenalty,
+      frequency_penalty: aiSettings.frequencyPenalty,
+      max_tokens: aiSettings.maxTokens
     });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw handleAPIError(response.status, errorData);
-    }
-
-    const data = await response.json();
-    return data.choices[0].message.content;
   } catch (error) {
     console.error('Erreur de génération de la lettre:', error);
     if (error instanceof Error) {
