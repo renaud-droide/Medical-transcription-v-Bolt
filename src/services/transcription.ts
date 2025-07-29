@@ -1,4 +1,4 @@
-import { API_CONFIG } from '../config/api';
+import { API_CONFIG, getOpenAIHeaders } from '../config/api';
 import { useRecordingStore } from '../store/recordingStore';
 import { handleAPIError } from '../utils/errorHandling';
 
@@ -90,11 +90,15 @@ export async function generateReport(transcription: string, template: string): P
   }
 
   try {
-    const { aiSettings } = useRecordingStore.getState();
+    const { aiSettings, openAIApiKey } = useRecordingStore.getState();
+
+    if (!openAIApiKey) {
+      throw new Error('Clé API OpenAI manquante. Veuillez la renseigner dans les paramètres.');
+    }
 
     const response = await fetch(`${API_CONFIG.baseURL}/chat/completions`, {
       method: 'POST',
-      headers: API_CONFIG.headers,
+      headers: getOpenAIHeaders(openAIApiKey),
       body: JSON.stringify({
         model: 'gpt-4o-mini-2024-07-18',
         messages: [
@@ -133,11 +137,15 @@ export async function generateReport(transcription: string, template: string): P
 
 export async function generateColleagueLetter(transcription: string, report: string): Promise<string> {
   try {
-    const { aiSettings, selectedLetterTemplate } = useRecordingStore.getState();
+    const { aiSettings, selectedLetterTemplate, openAIApiKey } = useRecordingStore.getState();
+
+    if (!openAIApiKey) {
+      throw new Error('Clé API OpenAI manquante. Veuillez la renseigner dans les paramètres.');
+    }
 
     const response = await fetch(`${API_CONFIG.baseURL}/chat/completions`, {
       method: 'POST',
-      headers: API_CONFIG.headers,
+      headers: getOpenAIHeaders(openAIApiKey),
       body: JSON.stringify({
         model: 'gpt-4o-mini-2024-07-18',
         messages: [

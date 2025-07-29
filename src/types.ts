@@ -39,6 +39,7 @@ export interface RecordingState {
   isProcessing: boolean;
   error: string | null;
   aiSettings: AISettings;
+  openAIApiKey: string;
   logoUrl: string;
   setLogoUrl: (url: string) => void;
   setIsRecording: (isRecording: boolean) => void;
@@ -56,6 +57,7 @@ export interface RecordingState {
   setIsProcessing: (isProcessing: boolean) => void;
   setError: (error: string | null) => void;
   setAISettings: (settings: AISettings) => void;
+  setOpenAIApiKey: (key: string) => void;
   addLetterTemplate: (template: LetterTemplate) => void;
   updateLetterTemplate: (template: LetterTemplate) => void;
   deleteLetterTemplate: (id: string) => void;

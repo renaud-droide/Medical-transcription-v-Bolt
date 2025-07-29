@@ -83,6 +83,7 @@ export const useRecordingStore = create<RecordingState>((set) => ({
   isProcessing: false,
   error: null,
   aiSettings: DEFAULT_AI_SETTINGS,
+  openAIApiKey: localStorage.getItem('openAIApiKey') || '',
   logoUrl: '',
   setLogoUrl: (url) => set({ logoUrl: url }),
   setIsRecording: (isRecording) => set({ isRecording }),
@@ -102,6 +103,10 @@ export const useRecordingStore = create<RecordingState>((set) => ({
   setIsProcessing: (isProcessing) => set({ isProcessing }),
   setError: (error) => set({ error }),
   setAISettings: (settings) => set({ aiSettings: settings }),
+  setOpenAIApiKey: (key) => {
+    localStorage.setItem('openAIApiKey', key);
+    set({ openAIApiKey: key });
+  },
   addLetterTemplate: (template) => set((state) => ({
     letterTemplates: [...state.letterTemplates, template]
   })),

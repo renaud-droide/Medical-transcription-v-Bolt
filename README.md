@@ -40,6 +40,10 @@ npm run dev
 4. Le système détectera automatiquement les changements de locuteur
 5. Générez le compte rendu final
 
+## Configuration de l'API
+
+Pour exploiter l'analyse OpenAI, ouvrez le menu **Paramètres** (icône en forme d'engrenage) et renseignez votre clé API dans le champ *Clé API OpenAI*. Cette clé est nécessaire pour générer les comptes rendus et les lettres.
+
 ## Notes de version
 - Version 2.0.0 : Refonte majeure de l'interface et des fonctionnalités
 - Amélioration significative de la détection des locuteurs

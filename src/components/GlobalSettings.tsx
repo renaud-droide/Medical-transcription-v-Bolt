@@ -4,13 +4,15 @@ import { useRecordingStore } from '../store/recordingStore';
 import type { AISettings } from '../types';
 
 export const GlobalSettings: React.FC = () => {
-  const { aiSettings, setAISettings, logoUrl, setLogoUrl } = useRecordingStore();
+  const { aiSettings, setAISettings, logoUrl, setLogoUrl, openAIApiKey, setOpenAIApiKey } = useRecordingStore();
   const [isOpen, setIsOpen] = useState(false);
   const [tempSettings, setTempSettings] = useState<AISettings>(aiSettings);
+  const [tempApiKey, setTempApiKey] = useState(openAIApiKey);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSave = () => {
     setAISettings(tempSettings);
+    setOpenAIApiKey(tempApiKey);
     setIsOpen(false);
   };
 
@@ -80,6 +82,19 @@ export const GlobalSettings: React.FC = () => {
                     </p>
                   </div>
                 </div>
+              </div>
+
+              <div className="border-b pb-4">
+                <label className="text-sm font-medium text-gray-700 mb-2 block">
+                  Clé API OpenAI
+                </label>
+                <input
+                  type="password"
+                  value={tempApiKey}
+                  onChange={(e) => setTempApiKey(e.target.value)}
+                  className="w-full border border-gray-300 rounded-md px-3 py-2"
+                  placeholder="Entrez votre clé API"
+                />
               </div>
 
               <div>
