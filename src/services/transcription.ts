@@ -32,14 +32,14 @@ async function initializeRecognition(
   stream: MediaStream,
   onTranscript: (transcript: string) => void
 ): Promise<SpeechRecognition> {
-  const SpeechRecognition =
-    window.SpeechRecognition ||
+  const SpeechRecognitionCtor =
+    (window as any).SpeechRecognition ||
     // @ts-ignore - vendor-prefixed API for some browsers
     (window as any).webkitSpeechRecognition;
-  if (!SpeechRecognition) {
+  if (typeof SpeechRecognitionCtor !== 'function') {
     throw new Error('API SpeechRecognition non prise en charge par ce navigateur.');
   }
-  const newRecognition = new SpeechRecognition();
+  const newRecognition = new SpeechRecognitionCtor();
 
   // Mode continu sans résultats intermédiaires
   newRecognition.continuous = true;
