@@ -36,8 +36,14 @@ async function initializeRecognition(
     (window as any).SpeechRecognition ||
     // @ts-ignore - vendor-prefixed API for some browsers
     (window as any).webkitSpeechRecognition;
+  if (!window.isSecureContext) {
+    throw new Error("L'API SpeechRecognition nécessite une connexion HTTPS.");
+  }
   if (!SpeechRecognitionCtor || typeof SpeechRecognitionCtor !== 'function') {
-    throw new Error('API SpeechRecognition non prise en charge par ce navigateur.');
+    throw new Error(
+      'API SpeechRecognition non prise en charge par ce navigateur. ' +
+        'Utilisez Google Chrome ou Microsoft Edge.'
+    );
   }
   const newRecognition = new SpeechRecognitionCtor();
 

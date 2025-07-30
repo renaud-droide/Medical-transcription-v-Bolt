@@ -21,7 +21,8 @@
 
 ## Configuration requise
 - Node.js 18+
-- Navigateur moderne avec support de l'API Web Speech
+- Navigateur Chromium (Google Chrome ou Microsoft Edge) avec support de l'API Web Speech
+- Accès via HTTPS
 - Microphone fonctionnel
 
 ## Installation
