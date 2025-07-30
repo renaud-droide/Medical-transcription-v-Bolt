@@ -23,6 +23,8 @@
 - Node.js 18+
 - Navigateur moderne avec support de l'API Web Speech
 - Microphone fonctionnel
+- L'application fonctionne uniquement dans un contexte HTTPS
+- Google Chrome ou Microsoft Edge sont recommandés
 
 ## Installation
 ```bash

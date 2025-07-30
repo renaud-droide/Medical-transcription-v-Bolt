@@ -40,6 +40,13 @@ export const Controls: React.FC = () => {
   }, []);
 
   const handleStartRecording = async () => {
+    const supportsSpeechRecognition =
+      'SpeechRecognition' in window || 'webkitSpeechRecognition' in window;
+    if (!supportsSpeechRecognition) {
+      setError('Votre navigateur ne supporte pas la reconnaissance vocale. Utilisez Chrome ou Edge en HTTPS.');
+      return;
+    }
+
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       setAudioStream(stream);
